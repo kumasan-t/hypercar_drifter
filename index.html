@@ -41,8 +41,8 @@ and open the template in the editor.
             var keys={
                 left:0,
                 right:0,
-                forward:0,
-                back:0
+                up:0,
+                down:0
             };
             window.addEventListener("keydown", handleKeyDown, false);
             window.addEventListener("keyup", handleKeyUp, false);
@@ -55,9 +55,9 @@ and open the template in the editor.
                     keys.right=1;    
                 }    
                 if (evt.keyCode==87){//W        
-                    keys.forward=1;    
+                    keys.up=1;    
                 }    if (evt.keyCode==83){//S        
-                    keys.back=1;    
+                    keys.down=1;    
                 }
             }
             
@@ -69,9 +69,9 @@ and open the template in the editor.
                     keys.right=0;    
                 }    
                 if (evt.keyCode==87){        
-                    keys.forward=0;    
+                    keys.up=0;    
                 }    if (evt.keyCode==83){        
-                    keys.back=0;    
+                    keys.down=0;    
                 }
             }
             
@@ -79,7 +79,7 @@ and open the template in the editor.
                 var scene = new BABYLON.Scene(engine);
                 scene.clearColor = new BABYLON.Color3(0,0,0.2);
                 
-                var camera = new BABYLON.ArcRotateCamera("Camera", 0, -3.0, 10.0, BABYLON.Vector3.Zero(), scene);
+                var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -10), scene);
                 //camera.attachControl(canvas,false);
                 
                 var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0,1,0), scene);
@@ -88,7 +88,7 @@ and open the template in the editor.
                 light.intensity = 0.5;
                 box1 = BABYLON.Mesh.CreateBox("Box1", 1.0, scene);
                 box1.xDirection = 0;
-                
+                box1.yDirection = 0;
                 
                 
                 return scene;
@@ -100,16 +100,19 @@ and open the template in the editor.
             var i = 0;
             engine.runRenderLoop(function(){
                 
-                var xMovement = 0;
+                var xMovement =0,yMovement = 0;
                 if(keys.left == 1)
                     xMovement += 1;
                 if(keys.right == 1)
                     xMovement -= 1;
+                if(keys.up == 1)
+                    yMovement -= 1;
+                if(keys.down == 1)
+                    yMovement += 1;
+                updateRotation(box1, 1/6, xMovement, yMovement);
                 
-                updateRotation(box1, 1/6, xMovement, 0);
-                if(i%100 == 0)
-                    console.log(box1.rotation.x);
-                i++;
+                box1.position.x-= box1.xDirection;
+                box1.position.y-= box1.yDirection;
                 scene.render();
             });
             
