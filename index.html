@@ -13,6 +13,7 @@ and open the template in the editor.
         <script src="./js/cannon.js"></script>  <!-- optional -->
         <script src="./js/oimo.js"></script>  <!-- optional -->
         <script src="./js/babylon.js"></script>
+        <script src="./js/direction.js"></script>
         
         <style>
             html,body{
@@ -35,28 +36,80 @@ and open the template in the editor.
         <script>
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
+            var box1;
+            
+            var keys={
+                left:0,
+                right:0,
+                forward:0,
+                back:0
+            };
+            window.addEventListener("keydown", handleKeyDown, false);
+            window.addEventListener("keyup", handleKeyUp, false);
+            function handleKeyDown(evt){    
+                if (evt.keyCode==65){
+                    //A        
+                    keys.left=1;    
+                }    
+                if (evt.keyCode==68){//D        
+                    keys.right=1;    
+                }    
+                if (evt.keyCode==87){//W        
+                    keys.forward=1;    
+                }    if (evt.keyCode==83){//S        
+                    keys.back=1;    
+                }
+            }
+            
+            function handleKeyUp(evt){    
+                if (evt.keyCode==65){        
+                    keys.left=0;    
+                }    
+                if (evt.keyCode==68){        
+                    keys.right=0;    
+                }    
+                if (evt.keyCode==87){        
+                    keys.forward=0;    
+                }    if (evt.keyCode==83){        
+                    keys.back=0;    
+                }
+            }
+            
             var createScene = function(){
                 var scene = new BABYLON.Scene(engine);
                 scene.clearColor = new BABYLON.Color3(0,0,0.2);
                 
-                var camera = new BABYLON.ArcRotateCamera("Camera", 3.0, -3.0, 10.0, BABYLON.Vector3.Zero(), scene);
-                camera.attachControl(canvas,false);
+                var camera = new BABYLON.ArcRotateCamera("Camera", 0, -3.0, 10.0, BABYLON.Vector3.Zero(), scene);
+                //camera.attachControl(canvas,false);
                 
                 var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0,1,0), scene);
                 light.groundColor = new BABYLON.Color3(0.5,0,0.5);
                 
                 light.intensity = 0.5;
-                var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene, true);
-                sphere.position.y = 1;
+                box1 = BABYLON.Mesh.CreateBox("Box1", 1.0, scene);
+                box1.xDirection = 0;
                 
                 
                 
                 return scene;
             };
             
-            var scene = createScene();
             
+            
+            var scene = createScene();
+            var i = 0;
             engine.runRenderLoop(function(){
+                
+                var xMovement = 0;
+                if(keys.left == 1)
+                    xMovement += 1;
+                if(keys.right == 1)
+                    xMovement -= 1;
+                
+                updateRotation(box1, 1/6, xMovement, 0);
+                if(i%100 == 0)
+                    console.log(box1.rotation.x);
+                i++;
                 scene.render();
             });
             
