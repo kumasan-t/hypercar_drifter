@@ -1,8 +1,5 @@
-var fullChangeDirectionTime = 500;
 var fullAngle = Math.PI/8;
-var speedDirection = 1/5;
-var i;
-
+var speedDirection = 6;
 
 function updateRotation(player, delta, xMovement, yMovement){
     updateXRotation(player, delta, xMovement);
@@ -34,7 +31,7 @@ function updateXRotation(player, delta, xMovement){
     
     direction = Math.max(-1, Math.min(1, direction));
     player.xDirection = direction;
-    player.rotation.z = direction * fullAngle;
+    player.rotation.x = direction * fullAngle;
 }
 
 function updateYRotation(player, delta, yMovement){
@@ -62,5 +59,5 @@ function updateYRotation(player, delta, yMovement){
     
     direction = Math.max(-1, Math.min(1, direction));
     player.yDirection = direction;
-    player.rotation.x = direction * fullAngle;
+    player.rotation.z = direction * fullAngle;
 }

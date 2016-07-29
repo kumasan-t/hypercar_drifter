@@ -47,8 +47,7 @@ and open the template in the editor.
         <script>
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
-            var car;
-            var speed = 15;
+            var box1;
             var loaded = false;
             
             var keys={
@@ -98,17 +97,14 @@ and open the template in the editor.
                 var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0,1,0), scene);
                 light.groundColor = new BABYLON.Color3(0.5,0,0.5);
                 
-                light.intensity = 1;
-                BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function(meshes){
-                    car = meshes[0];
-                    car.rotation.y = -Math.PI/2;
-                    car.xDirection = 0;
-                    car.yDirection = 0;
-                    car.scaling = new BABYLON.Vector3(.5,.5,.5);
-                    loaded = true;
-                    
-                    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -10), scene);
-                });                
+                light.intensity = 0.5;
+                var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -10), scene);
+                BABYLON.SceneLoader.ImportMesh("s", "assets/", "supercar.babylon", scene, function (newMeshes, particleSystems, skeletons) {
+        // Set the target of the camera to the first imported mesh
+        camera.target = newMeshes[0];
+    });
+                
+                
                 
                 return scene;
             };
@@ -118,38 +114,8 @@ and open the template in the editor.
             var scene = createScene();
             var i = 0;
             engine.runRenderLoop(function(){
-                if(loaded){
-                var xMovement =0,yMovement = 0;
-                if(keys.left == 1)
-                    xMovement += 1;
-                if(keys.right == 1)
-                    xMovement -= 1;
-                if(keys.up == 1)
-                    yMovement += 1;
-                if(keys.down == 1)
-                    yMovement -= 1;
-                updateRotation(car, 1/engine.fps, xMovement, yMovement);
-                
-                car.position.x-= speed/engine.fps * car.xDirection;
-                car.position.y+= speed/engine.fps * car.yDirection;
-                
-                if (car.position.x > 7 ) {
-                    car.position.x = 7;
-                }
-                if (car.position.y > 3.5 ) {
-                    car.position.y = 3.5;
-                }
-                if (car.position.x < -7) {
-                    car.position.x = -7;
-                }
-               
-                if (car.position.y < -3.5) {
-                    car.position.y = -3.5;
-                }
                 
                 scene.render();
-                }
-                
                 
             });
             
