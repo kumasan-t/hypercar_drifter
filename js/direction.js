@@ -1,5 +1,8 @@
 var fullAngle = Math.PI/8;
 var speedDirection = 6;
+var alphaPosition = 0.02;
+var alphaRotation = 0.1;
+var Omega = setPeriod(2000);
 
 function updateRotation(player, delta, xMovement, yMovement){
     updateXRotation(player, delta, xMovement);
@@ -57,7 +60,18 @@ function updateYRotation(player, delta, yMovement){
         direction += yMovement * speedDirection * delta;
     }
     
+    player.position.y -= alphaPosition * Math.sin(Omega * getTime()); //Oscillation on the Y axis.
     direction = Math.max(-1, Math.min(1, direction));
     player.yDirection = direction;
     player.rotation.z = direction * fullAngle;
+    player.rotation.z -= alphaRotation * Math.sin(Omega * getTime()); //Oscillate around the previous angle.
+}
+
+function setPeriod(period) {
+    return 2 * Math.PI / period;
+}
+
+function getTime() {
+    var d = new Date();
+    return d.getTime();
 }
