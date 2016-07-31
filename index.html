@@ -14,6 +14,7 @@ and open the template in the editor.
         <script src="./js/oimo.js"></script>  <!-- optional -->
         <script src="./js/babylon.js"></script>
         <script src="./js/direction.js"></script>
+        <script src="./js/obstacles.js"></script>
         
         <style>
             html,body{
@@ -48,7 +49,8 @@ and open the template in the editor.
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
             var car;
-            var speed = 15;
+            var speed = 10;
+            var obstacles_manager = new Obstacles(-15);
             var loaded = false;
             
             var keys={
@@ -104,10 +106,10 @@ and open the template in the editor.
                     car.rotation.y = -Math.PI/2;
                     car.xDirection = 0;
                     car.yDirection = 0;
-                    car.scaling = new BABYLON.Vector3(.5,.5,.5);
+                    car.scaling = new BABYLON.Vector3(.25,.25,.25);
                     loaded = true;
                     
-                    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -10), scene);
+                    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -5), scene);
                 });                
                 
                 return scene;
@@ -133,19 +135,23 @@ and open the template in the editor.
                 car.position.x-= speed/engine.fps * car.xDirection;
                 car.position.y+= speed/engine.fps * car.yDirection;
                 
-                if (car.position.x > 7 ) {
-                    car.position.x = 7;
+                if (car.position.x > 3 ) {
+                    car.position.x = 3;
                 }
-                if (car.position.y > 3.5 ) {
-                    car.position.y = 3.5;
+                if (car.position.y > 1.5 ) {
+                    car.position.y = 1.5;
                 }
-                if (car.position.x < -7) {
-                    car.position.x = -7;
+                if (car.position.x < -3) {
+                    car.position.x = -3;
                 }
                
-                if (car.position.y < -3.5) {
-                    car.position.y = -3.5;
+                if (car.position.y < -1.5) {
+                    car.position.y = -1.5;
                 }
+                
+                obstacles_manager.update(3, 1/engine.fps);
+                obstacles_manager.despawn();
+                obstacles_manager.spawn(scene, 1/engine.fps);
                 
                 scene.render();
                 }
