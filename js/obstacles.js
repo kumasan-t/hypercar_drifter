@@ -36,7 +36,7 @@ function Obstacles(threshold){
         this.elapsedTime = 0;
         this.spawnTime -= this.spawnTime/100;
         console.log(this.spawnTime);
-       this.spawnObstacleGroup(this.meshPicker(8));
+       this.spawnObstacleGroup(this.meshPicker(1));
     }
     
     this.spawnObstacleGroup = function(selectedObstacles) {

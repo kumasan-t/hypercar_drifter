@@ -1,0 +1,19 @@
+{"producer":{"name":"Blender","version":"2.77 (sub 0)","exporter_version":"4.6.1","file":"pianohuhu.babylon"},
+"autoClear":true,"clearColor":[0.0509,0.0509,0.0509],"ambientColor":[0,0,0],"gravity":[0,-9.81,0],
+"materials":[{"name":"pianohuhu.Material.001","id":"pianohuhu.Material.001","ambient":[0.8,0.8,0.8],"diffuse":[0.64,0.64,0.64],"specular":[0,0,0],"emissive":[0,0,0],"specularPower":50,"alpha":1,"backFaceCulling":true,"checkReadyOnlyOnce":false, 
+"diffuseTexture":{"name":"pianospritep.png","level":0,"hasAlpha":0,"coordinatesMode":0,"uOffset":0,"vOffset":0,"uScale":1,"vScale":1,"uAng":0,"vAng":0,"wAng":0,"wrapU":1,"wrapV":1,"coordinatesIndex":0}, 
+"specularTexture":{"name":"pianosprites.png","level":1,"hasAlpha":1,"coordinatesMode":0,"uOffset":0,"vOffset":0,"uScale":1,"vScale":1,"uAng":0,"vAng":0,"wAng":0,"wrapU":1,"wrapV":1,"coordinatesIndex":0}}],
+"multiMaterials":[],
+"skeletons":[],
+"meshes":[{"name":"Plane","id":"Plane","materialId":"pianohuhu.Material.001","billboardMode":0,"position":[0,0,0],"rotation":[0,0,0],"scaling":[4.2475,4.2475,4.2475],"isVisible":true,"freezeWorldMatrix":false,"isEnabled":true,"checkCollisions":false,"receiveShadows":false
+,"positions":[-0.5837,0,0,-0.5725,0,0.1139,-1,0,1,1,0,-1,0.5837,0,0,0.5725,0,-0.1139,-1,0,-1,0,0,-0.5837,-0.1139,0,-0.5725,-0.2234,0,-0.5393,0,0,0.5837,1,0,1,-0.1139,0,0.5725,-0.3243,0,-0.4854,-0.4128,0,-0.4128,-0.2234,0,0.5393,-0.3243,0,0.4854,-0.4854,0,-0.3243,-0.5393,0,-0.2234,-0.4128,0,0.4128,-0.4854,0,0.3243,-0.5725,0,-0.1139,-0.5393,0,0.2234,0.1139,0,0.5725,0.2234,0,0.5393,0.1139,0,-0.5725,0.2234,0,-0.5393,0.3243,0,0.4854,0.4128,0,0.4128,0.3243,0,-0.4854,0.4128,0,-0.4128,0.4854,0,0.3243,0.5393,0,0.2234,0.4854,0,-0.3243,0.5393,0,-0.2234,0.5725,0,0.1139]
+,"normals":[0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0]
+,"uvs":[0.2945,0.5,0.2984,0.5401,0.1479,0.8521,0.8521,0.1479,0.7055,0.5,0.7016,0.4599,0.1479,0.1479,0.5,0.2945,0.4599,0.2984,0.4213,0.3101,0.5,0.7055,0.8521,0.8521,0.4599,0.7016,0.3858,0.3291,0.3547,0.3547,0.4213,0.6899,0.3858,0.6709,0.3291,0.3858,0.3101,0.4213,0.3547,0.6453,0.3291,0.6142,0.2984,0.4599,0.3101,0.5786,0.5401,0.7016,0.5787,0.6899,0.5401,0.2984,0.5786,0.3101,0.6142,0.6709,0.6453,0.6453,0.6142,0.3291,0.6453,0.3547,0.6709,0.6142,0.6899,0.5786,0.6709,0.3858,0.6899,0.4213,0.7016,0.5401]
+,"indices":[0,1,2,3,4,5,6,7,8,6,8,9,10,11,2,12,10,2,6,9,13,6,13,14,15,12,2,16,15,2,6,14,17,6,17,18,19,16,2,20,19,2,2,6,0,6,18,21,22,20,2,1,22,2,6,21,0,7,6,3,11,10,23,11,23,24,25,7,3,26,25,3,11,24,27,11,27,28,29,26,3,30,29,3,11,28,31,11,31,32,33,30,3,34,33,3,3,11,4,11,32,35,5,34,3,11,35,4]
+,"subMeshes":[{"materialIndex":0,"verticesStart":0,"verticesCount":36,"indexStart":0,"indexCount":108}]
+,"instances":[]}
+],
+"cameras":[{"name":"Camera","id":"Camera","position":[7.4811,5.3437,-6.5076],"rotation":[0.4615,-0.8149,0.0108],"fov":0.8576,"minZ":0.1,"maxZ":100,"speed":1,"inertia":0.9,"checkCollisions":false,"applyGravity":false,"ellipsoid":[0.2,0.9,0.2],"cameraRigMode":0,"interaxial_distance":0.0637,"type":"FreeCamera"}],"activeCamera":"Camera",
+"lights":[{"name":"Lamp","id":"Lamp","type":0,"position":[2.5935,1.7767,2.9324],"intensity":2.19,"diffuse":[1,1,1],"specular":[1,1,1]}],
+"shadowGenerators":[]
+}

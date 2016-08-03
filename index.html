@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>TODO supply a title</title>
@@ -15,7 +9,7 @@ and open the template in the editor.
         <script src="./js/babylon.js"></script>
         <script src="./js/direction.js"></script>
         <script src="./js/obstacles.js"></script>
-        
+        <script src="./js/planes.js"></script>
         <style>
             html,body{
                 position:relative;
@@ -25,7 +19,7 @@ and open the template in the editor.
                 margin: 0;
                 padding: 0;
             }
-            
+
             #renderCanvas{
                 position: absolute;
                 top: 0;
@@ -34,7 +28,7 @@ and open the template in the editor.
                 margin-left: auto;
                 margin-right: auto;
                 bottom: 0;
-                
+
                 margin-top: auto;
                 margin-bottom: auto;
                 width: 1066px;
@@ -49,119 +43,224 @@ and open the template in the editor.
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
             var car;
-            var speed = 10;
+            var speed = 4;
             var obstacles_manager = new Obstacles(-15);
             var loaded = false;
-            
-            var keys={
-                left:0,
-                right:0,
-                up:0,
-                down:0
+            var planeManager = new Plane(-10, 50);
+            var specularLight;
+            var meshPlane;
+
+            var keys = {
+                left: 0,
+                right: 0,
+                up: 0,
+                down: 0
             };
             window.addEventListener("keydown", handleKeyDown, false);
             window.addEventListener("keyup", handleKeyUp, false);
-            function handleKeyDown(evt){    
-                if (evt.keyCode==65){
+            function handleKeyDown(evt) {
+                if (evt.keyCode == 65) {
                     //A        
-                    keys.left=1;    
-                }    
-                if (evt.keyCode==68){//D        
-                    keys.right=1;    
-                }    
-                if (evt.keyCode==87){//W        
-                    keys.up=1;    
-                }    if (evt.keyCode==83){//S        
-                    keys.down=1;    
+                    keys.left = 1;
+                }
+                if (evt.keyCode == 68) {//D        
+                    keys.right = 1;
+                }
+                if (evt.keyCode == 87) {//W        
+                    keys.up = 1;
+                }
+                if (evt.keyCode == 83) {//S        
+                    keys.down = 1;
                 }
             }
-            
-            function handleKeyUp(evt){    
-                if (evt.keyCode==65){        
-                    keys.left=0;    
-                }    
-                if (evt.keyCode==68){        
-                    keys.right=0;    
-                }    
-                if (evt.keyCode==87){        
-                    keys.up=0;    
-                }    if (evt.keyCode==83){        
-                    keys.down=0;    
+
+            function handleKeyUp(evt) {
+                if (evt.keyCode == 65) {
+                    keys.left = 0;
+                }
+                if (evt.keyCode == 68) {
+                    keys.right = 0;
+                }
+                if (evt.keyCode == 87) {
+                    keys.up = 0;
+                }
+                if (evt.keyCode == 83) {
+                    keys.down = 0;
                 }
             }
-            
-            var createScene = function(){
+
+            var createScene = function () {
                 var scene = new BABYLON.Scene(engine);
-                scene.clearColor = new BABYLON.Color3(0,0,0.2);
-                
-                
-                //camera.attachControl(canvas,false);
-                
-                var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0,1,0), scene);
-                light.groundColor = new BABYLON.Color3(0.5,0,0.5);
-                
+                scene.clearColor = new BABYLON.Color3(.95, .95, .95);
+
+                var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
+                light.groundColor = new BABYLON.Color3(0.5, 0, 0.5);
                 light.intensity = 1;
-                BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function(meshes){
+
+                specularLight = new BABYLON.PointLight("Omni0", new BABYLON.Vector3(1, 10, -1), scene);
+                specularLight.diffuseColor = new BABYLON.Color3(0, 0, 0);
+                specularLight.specularColor = new BABYLON.Color3(1, 1, 1);
+                specularLight.range = 10;
+                specularLight.intensity = 10;
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function (meshes) {
                     car = meshes[0];
-                    car.rotation.y = -Math.PI/2;
-                    car.xDirection = 0;
-                    car.yDirection = 0;
-                    car.scaling = new BABYLON.Vector3(.25,.25,.25);
-                    loaded = true;
-                    
-                    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -5), scene);
-                });                
+                    BABYLON.SceneLoader.ImportMesh("", "assets/", "sottocar.babylon", scene, function (bottom) {
+                        bottom[0].parent = car;
+                        bottom[0].position.x = 1.1;
+                        bottom[0].position.z = 0;
+                        bottom[0].material = new BABYLON.StandardMaterial("", scene);
+                        bottom[0].material.diffuseColor = new BABYLON.Color3(.05, .05, .05);
+                        bottom[0].material.specularColor = new BABYLON.Color3(0, 0, 0);
+                        car.rotation.y = -Math.PI / 2;
+                        car.xDirection = 0;
+                        car.yDirection = 0;
+                        car.scaling = new BABYLON.Vector3(.125, .125, .125);
+                        loaded = true;
+                    });
+                });
+
+                var planeMaterial = loadPlaneMaterial(scene);
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "pianohuhu.babylon", scene, function (meshes) {
+                    meshes[0].rotation.x = -Math.PI / 2;
+                    meshes[0].scaling = new BABYLON.Vector3(2.5, 2.5, 2.5);
+                    meshes[0].material = planeMaterial;
+                    meshes[0].isVisible = false;
+                    meshPlane = meshes[0];
+                    planeManager.spawn(scene);
+                });
+
+                scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
+                scene.fogColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+                scene.fogDensity = 1;
+                scene.fogStart = 10.0;
+                scene.fogEnd = 50.0;
                 
                 return scene;
             };
-            
-            
-            
+
             var scene = createScene();
+
+            var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -2.5), scene);
+
             var i = 0;
-            engine.runRenderLoop(function(){
-                if(loaded){
-                var xMovement =0,yMovement = 0;
-                if(keys.left == 1)
-                    xMovement += 1;
-                if(keys.right == 1)
-                    xMovement -= 1;
-                if(keys.up == 1)
-                    yMovement += 1;
-                if(keys.down == 1)
-                    yMovement -= 1;
-                updateRotation(car, 1/engine.fps, xMovement, yMovement);
-                
-                car.position.x-= speed/engine.fps * car.xDirection;
-                car.position.y+= speed/engine.fps * car.yDirection;
-                
-                if (car.position.x > 3 ) {
-                    car.position.x = 3;
+            var k = 0;
+            var frameCount = 0;
+            engine.runRenderLoop(function () {
+                if (k % 60 == 0)
+                    console.log(engine.fps);
+                k++;
+                frameCount++;
+                if (loaded) {
+                    var xMovement = 0, yMovement = 0;
+                    if (keys.left == 1)
+                        xMovement += 1;
+                    if (keys.right == 1)
+                        xMovement -= 1;
+                    if (keys.up == 1)
+                        yMovement += 1;
+                    if (keys.down == 1)
+                        yMovement -= 1;
+                    updateRotation(car, 1 / engine.fps, xMovement, yMovement);
+
+                    car.position.x -= speed / engine.fps * car.xDirection;
+                    car.position.y += speed / engine.fps * car.yDirection;
+
+                    if (car.position.x > 1) {
+                        car.position.x = 1;
+                    }
+                    if (car.position.y > .5) {
+                        car.position.y = .5;
+                    }
+                    if (car.position.x < -1) {
+                        car.position.x = -1;
+                    }
+
+                    if (car.position.y < -.5) {
+                        car.position.y = -.5;
+                    }
+
+                    specularLight.position.x = car.position.x * 4;
+                    specularLight.position.y = car.position.y * 4;
+                    obstacles_manager.update(3, 1 / engine.fps);
+                    obstacles_manager.despawn();
+                    obstacles_manager.spawn(scene, 1 / engine.fps);
+
+                    planeManager.update(2, 1 / engine.fps);
+
+                    scene.render();
                 }
-                if (car.position.y > 1.5 ) {
-                    car.position.y = 1.5;
-                }
-                if (car.position.x < -3) {
-                    car.position.x = -3;
-                }
-               
-                if (car.position.y < -1.5) {
-                    car.position.y = -1.5;
-                }
-                
-                obstacles_manager.update(3, 1/engine.fps);
-                obstacles_manager.despawn();
-                obstacles_manager.spawn(scene, 1/engine.fps);
-                
-                scene.render();
-                }
-                
-                
             });
-            
-            window.addEventListener("resize", function(){
+
+            window.addEventListener("resize", function () {
                 engine.resize();
             });
+
+            function loadPlaneMaterial(scene) {
+                var material1 = new BABYLON.StandardMaterial('a', scene);
+                material1.alpha = 1;
+                material1.backFaceCulling = true;
+                material1.specularPower = 64;
+                material1.useSpecularOverAlpha = true;
+                material1.useAlphaFromDiffuseTexture = false;
+
+// diffuse definitions;
+                var material1_diffuseTexture = new BABYLON.Texture('assets/pianospritep.png', scene);
+                material1_diffuseTexture.uScale = 1;
+                material1_diffuseTexture.vScale = 1;
+                material1_diffuseTexture.coordinatesMode = 0;
+                material1_diffuseTexture.uOffset = 0;
+                material1_diffuseTexture.vOffset = 0;
+                material1_diffuseTexture.uAng = 0;
+                material1_diffuseTexture.vAng = 0;
+                material1_diffuseTexture.level = 1;
+                material1_diffuseTexture.coordinatesIndex = 0;
+                material1_diffuseTexture.hasAlpha = false;
+                material1_diffuseTexture.getAlphaFromRGB = false;
+                material1.diffuseTexture = material1_diffuseTexture;
+                material1.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
+
+// emissive definitions;
+
+                material1.emissiveColor = new BABYLON.Color3(0.04, 0.99, 0.76);
+//Texture Parameters ;
+                var material1_emissiveTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
+                material1_emissiveTexture.uScale = 1;
+                material1_emissiveTexture.vScale = 1;
+                material1_emissiveTexture.coordinatesMode = 0;
+                material1_emissiveTexture.uOffset = 0;
+                material1_emissiveTexture.vOffset = 0;
+                material1_emissiveTexture.uAng = 0;
+                material1_emissiveTexture.vAng = 0;
+                material1_emissiveTexture.level = 1;
+                material1_emissiveTexture.coordinatesIndex = 0;
+                material1_emissiveTexture.hasAlpha = false;
+                material1_emissiveTexture.getAlphaFromRGB = false;
+                material1.emissiveTexture = material1_emissiveTexture;
+
+// ambient definitions;
+
+                material1.ambientColor = new BABYLON.Color3(0.00, 0.00, 0.00);
+
+// specular definitions;
+
+                material1.specularColor = new BABYLON.Color3(1.00, 1.00, 1.00);
+//Texture Parameters ;
+                var material1_specularTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
+                material1_specularTexture.uScale = 1;
+                material1_specularTexture.vScale = 1;
+                material1_specularTexture.coordinatesMode = 0;
+                material1_specularTexture.uOffset = 0;
+                material1_specularTexture.vOffset = 0;
+                material1_specularTexture.uAng = 0;
+                material1_specularTexture.vAng = 0;
+                material1_specularTexture.level = 1;
+                material1_specularTexture.coordinatesIndex = 0;
+                material1_specularTexture.hasAlpha = false;
+                material1_specularTexture.getAlphaFromRGB = false;
+                material1.specularTexture = material1_specularTexture;
+
+                return material1;
+            }
         </script>
     </body>
 </html>

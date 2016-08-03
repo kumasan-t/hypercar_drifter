@@ -1,0 +1,23 @@
+	Exporter version: 4.6.1, Blender version: 2.77 (sub 0)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used:
+		selected layers only:  false
+		flat shading entire scene:  false
+		inline textures:  false
+		texture directory:  C:\Users\Sara\Desktop\progetti\università\Computer Graphics\
+	Python World class constructor completed
+	processing begun of mesh:  Plane
+		processing begun of Standard material:  Material.001
+			WARNING: Material has un-assigned image texture:  "Texture.001" ignored
+		num positions      :  36
+		num normals        :  36
+		num uvs            :  72
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  108
+	processing begun of camera (FreeCamera):  Camera
+	processing begun of light (POINT):  Lamp
+========= Writing of scene file started =========
+========= Writing of scene file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.009 secs

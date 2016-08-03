@@ -60,7 +60,7 @@ function updateYRotation(player, delta, yMovement){
         direction += yMovement * speedDirection * delta;
     }
     
-    player.position.y -= alphaPosition * Math.sin(Omega * getTime()); //Oscillation on the Y axis.
+    player.position.y -= alphaPosition * 0.1*Math.sin(Omega * getTime()); //Oscillation on the Y axis.
     direction = Math.max(-1, Math.min(1, direction));
     player.yDirection = direction;
     player.rotation.z = direction * fullAngle;
