@@ -13,7 +13,6 @@ and open the template in the editor.
         <script src="./js/cannon.js"></script>  <!-- optional -->
         <script src="./js/oimo.js"></script>  <!-- optional -->
         <script src="./js/babylon.js"></script>
-        <script src="./js/direction.js"></script>
         
         <style>
             html,body{
@@ -50,42 +49,7 @@ and open the template in the editor.
             var box1;
             var loaded = false;
             
-            var keys={
-                left:0,
-                right:0,
-                up:0,
-                down:0
-            };
-            window.addEventListener("keydown", handleKeyDown, false);
-            window.addEventListener("keyup", handleKeyUp, false);
-            function handleKeyDown(evt){    
-                if (evt.keyCode==65){
-                    //A        
-                    keys.left=1;    
-                }    
-                if (evt.keyCode==68){//D        
-                    keys.right=1;    
-                }    
-                if (evt.keyCode==87){//W        
-                    keys.up=1;    
-                }    if (evt.keyCode==83){//S        
-                    keys.down=1;    
-                }
-            }
             
-            function handleKeyUp(evt){    
-                if (evt.keyCode==65){        
-                    keys.left=0;    
-                }    
-                if (evt.keyCode==68){        
-                    keys.right=0;    
-                }    
-                if (evt.keyCode==87){        
-                    keys.up=0;    
-                }    if (evt.keyCode==83){        
-                    keys.down=0;    
-                }
-            }
             
             var createScene = function(){
                 var scene = new BABYLON.Scene(engine);
@@ -99,9 +63,10 @@ and open the template in the editor.
                 
                 light.intensity = 0.5;
                 var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -10), scene);
-                BABYLON.SceneLoader.ImportMesh("s", "assets/", "supercar.babylon", scene, function (newMeshes, particleSystems, skeletons) {
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function (newMeshes, particleSystems, skeletons) {
         // Set the target of the camera to the first imported mesh
         camera.target = newMeshes[0];
+        loaded = truel
     });
                 
                 
@@ -114,8 +79,8 @@ and open the template in the editor.
             var scene = createScene();
             var i = 0;
             engine.runRenderLoop(function(){
-                
-                scene.render();
+                if(loaded)
+                    scene.render();
                 
             });
             

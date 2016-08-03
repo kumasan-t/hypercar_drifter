@@ -4,22 +4,22 @@
 		selected layers only:  false
 		flat shading entire scene:  false
 		inline textures:  false
-		texture directory:  C:\Users\Sara\Desktop\progetti\università\Computer Graphics\supercar\assets\
+		texture directory:  C:\Users\Sara\Documents\
 	Python World class constructor completed
-	processing begun of mesh:  Cube
+	processing begun of mesh:  Cylinder
 		processing begun of Standard material:  Material.001
-			Diffuse texture found "Texture.003"
+			Diffuse texture found "Texture"
 				Image texture found, type:  diffuseTexture, mapped using: "UVMap"
-		num positions      :  1397
-		num normals        :  1397
-		num uvs            :  2794
+	WARNING: Error encountered processing image file:  , Error:  'C:\\Users\\Sara\\Documents\\barilenitro.png' and 'C:\\Users\\Sara\\Documents\\barilenitro.png' are the same file
+		num positions      :  718
+		num normals        :  718
+		num uvs            :  1436
 		num uvs2           :  0
 		num colors         :  0
-		num indices        :  2067
+		num indices        :  1068
 	processing begun of camera (FreeCamera):  Camera
-	processing begun of light (POINT):  Point
 	processing begun of light (POINT):  Lamp
 ========= Writing of scene file started =========
 ========= Writing of scene file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.0868 secs
+elapsed time:  0 min, 0.0995 secs

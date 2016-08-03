@@ -4,22 +4,19 @@
 		selected layers only:  false
 		flat shading entire scene:  false
 		inline textures:  false
-		texture directory:  C:\Users\Sara\Desktop\progetti\università\Computer Graphics\supercar\assets\
+		texture directory:  C:\Users\Sara\Documents\
 	Python World class constructor completed
-	processing begun of mesh:  Cube
-		processing begun of Standard material:  Material.001
-			Diffuse texture found "Texture.003"
-				Image texture found, type:  diffuseTexture, mapped using: "UVMap"
-		num positions      :  1397
-		num normals        :  1397
-		num uvs            :  2794
+	processing begun of mesh:  Cylinder
+		WARNING: No materials have been assigned: 
+		num positions      :  840
+		num normals        :  840
+		num uvs            :  0
 		num uvs2           :  0
 		num colors         :  0
-		num indices        :  2067
+		num indices        :  5028
 	processing begun of camera (FreeCamera):  Camera
-	processing begun of light (POINT):  Point
 	processing begun of light (POINT):  Lamp
 ========= Writing of scene file started =========
 ========= Writing of scene file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.0868 secs
+elapsed time:  0 min, 0.1711 secs

@@ -19,16 +19,16 @@ function Plane(threshold, maxPlanes) {
     }
 
     this.update = function (speed, delta) {
+        this.time += delta;
         if (this.planePosition + 1 < this.maxPlanes) {
             return;
         }
-        this.time += delta;
         for (var i = 0; i < this.planeArray.length; i++) {
             this.planeArray[i].position.z -= speed * delta;
 
             if (this.planeArray[i].position.z < this.threshold)
                 this.planeArray[i].position.z += this.maxPlanes * this.planeDistance;
-            this.planeArray[i].position.x = 0.5 * Math.sin(this.time + this.planeArray[i].position.z / 10);
+            this.planeArray[i].position.x = 0.5 * Math.sin(globalTime + this.planeArray[i].position.z / 10);
         }
     }
 }

@@ -10,6 +10,8 @@
         <script src="./js/direction.js"></script>
         <script src="./js/obstacles.js"></script>
         <script src="./js/planes.js"></script>
+        <script src="./js/entities/barrel.js"></script>
+        <script src="./js/entities/propeller.js"></script>
         <style>
             html,body{
                 position:relative;
@@ -44,11 +46,19 @@
             var engine = new BABYLON.Engine(canvas, true);
             var car;
             var speed = 4;
-            var obstacles_manager = new Obstacles(-15);
-            var loaded = false;
+            var obstaclesManager;
             var planeManager = new Plane(-10, 50);
             var specularLight;
+            
+            var meshBarrel;
+            var meshPropeller;
             var meshPlane;
+            
+            var globalTime = 0;
+            
+            var carLoaded = false;
+            var barrelLoaded = false;
+            var propellerLoaded = false;
 
             var keys = {
                 left: 0,
@@ -115,7 +125,7 @@
                         car.xDirection = 0;
                         car.yDirection = 0;
                         car.scaling = new BABYLON.Vector3(.125, .125, .125);
-                        loaded = true;
+                        carLoaded = true;
                     });
                 });
 
@@ -129,12 +139,28 @@
                     planeManager.spawn(scene);
                 });
 
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "barilenitro.babylon", scene, function (meshes) {
+                    meshBarrel = meshes[0];
+                    meshBarrel.type = "nitro_barrel";
+                    meshBarrel.position.z = -15;
+                    barrelLoaded = true;
+                });
+
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "ventola.babylon", scene, function (meshes) {
+                    meshPropellers = meshes[0];
+                    meshPropellers.type = "propeller";
+                    meshPropellers.isVisible = false;
+                    propellerLoaded = true;
+                });
+
+                obstaclesManager = new Obstacles(-15);
+
                 scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
                 scene.fogColor = new BABYLON.Color3(0.9, 0.9, 0.9);
                 scene.fogDensity = 1;
                 scene.fogStart = 10.0;
                 scene.fogEnd = 50.0;
-                
+
                 return scene;
             };
 
@@ -142,15 +168,13 @@
 
             var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -2.5), scene);
 
-            var i = 0;
-            var k = 0;
             var frameCount = 0;
             engine.runRenderLoop(function () {
-                if (k % 60 == 0)
+                if (frameCount % 60 == 0)
                     console.log(engine.fps);
-                k++;
                 frameCount++;
-                if (loaded) {
+                globalTime += 1/engine.fps;
+                if (carLoaded & barrelLoaded & propellerLoaded) {
                     var xMovement = 0, yMovement = 0;
                     if (keys.left == 1)
                         xMovement += 1;
@@ -178,14 +202,13 @@
                     if (car.position.y < -.5) {
                         car.position.y = -.5;
                     }
-
                     specularLight.position.x = car.position.x * 4;
                     specularLight.position.y = car.position.y * 4;
-                    obstacles_manager.update(3, 1 / engine.fps);
-                    obstacles_manager.despawn();
-                    obstacles_manager.spawn(scene, 1 / engine.fps);
+                    obstaclesManager.update(speed, 1/engine.fps);
+                    obstaclesManager.despawn();
+                    obstaclesManager.spawn(scene, 1/engine.fps);
 
-                    planeManager.update(2, 1 / engine.fps);
+                    planeManager.update(speed, 1/engine.fps);
 
                     scene.render();
                 }
@@ -196,70 +219,70 @@
             });
 
             function loadPlaneMaterial(scene) {
-                var material1 = new BABYLON.StandardMaterial('a', scene);
-                material1.alpha = 1;
-                material1.backFaceCulling = true;
-                material1.specularPower = 64;
-                material1.useSpecularOverAlpha = true;
-                material1.useAlphaFromDiffuseTexture = false;
+                var material = new BABYLON.StandardMaterial('a', scene);
+                material.alpha = 1;
+                material.backFaceCulling = true;
+                material.specularPower = 64;
+                material.useSpecularOverAlpha = true;
+                material.useAlphaFromDiffuseTexture = false;
 
-// diffuse definitions;
-                var material1_diffuseTexture = new BABYLON.Texture('assets/pianospritep.png', scene);
-                material1_diffuseTexture.uScale = 1;
-                material1_diffuseTexture.vScale = 1;
-                material1_diffuseTexture.coordinatesMode = 0;
-                material1_diffuseTexture.uOffset = 0;
-                material1_diffuseTexture.vOffset = 0;
-                material1_diffuseTexture.uAng = 0;
-                material1_diffuseTexture.vAng = 0;
-                material1_diffuseTexture.level = 1;
-                material1_diffuseTexture.coordinatesIndex = 0;
-                material1_diffuseTexture.hasAlpha = false;
-                material1_diffuseTexture.getAlphaFromRGB = false;
-                material1.diffuseTexture = material1_diffuseTexture;
-                material1.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
+                //Diffuse definitions;
+                var material_diffuseTexture = new BABYLON.Texture('assets/pianospritep.png', scene);
+                material_diffuseTexture.uScale = 1;
+                material_diffuseTexture.vScale = 1;
+                material_diffuseTexture.coordinatesMode = 0;
+                material_diffuseTexture.uOffset = 0;
+                material_diffuseTexture.vOffset = 0;
+                material_diffuseTexture.uAng = 0;
+                material_diffuseTexture.vAng = 0;
+                material_diffuseTexture.level = 1;
+                material_diffuseTexture.coordinatesIndex = 0;
+                material_diffuseTexture.hasAlpha = false;
+                material_diffuseTexture.getAlphaFromRGB = false;
+                material.diffuseTexture = material_diffuseTexture;
+                material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
 
-// emissive definitions;
+                //Emissive definitions;
 
-                material1.emissiveColor = new BABYLON.Color3(0.04, 0.99, 0.76);
-//Texture Parameters ;
-                var material1_emissiveTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
-                material1_emissiveTexture.uScale = 1;
-                material1_emissiveTexture.vScale = 1;
-                material1_emissiveTexture.coordinatesMode = 0;
-                material1_emissiveTexture.uOffset = 0;
-                material1_emissiveTexture.vOffset = 0;
-                material1_emissiveTexture.uAng = 0;
-                material1_emissiveTexture.vAng = 0;
-                material1_emissiveTexture.level = 1;
-                material1_emissiveTexture.coordinatesIndex = 0;
-                material1_emissiveTexture.hasAlpha = false;
-                material1_emissiveTexture.getAlphaFromRGB = false;
-                material1.emissiveTexture = material1_emissiveTexture;
+                material.emissiveColor = new BABYLON.Color3(0.04, 0.99, 0.76);
 
-// ambient definitions;
+                //Texture parameters ;
+                var material_emissiveTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
+                material_emissiveTexture.uScale = 1;
+                material_emissiveTexture.vScale = 1;
+                material_emissiveTexture.coordinatesMode = 0;
+                material_emissiveTexture.uOffset = 0;
+                material_emissiveTexture.vOffset = 0;
+                material_emissiveTexture.uAng = 0;
+                material_emissiveTexture.vAng = 0;
+                material_emissiveTexture.level = 1;
+                material_emissiveTexture.coordinatesIndex = 0;
+                material_emissiveTexture.hasAlpha = false;
+                material_emissiveTexture.getAlphaFromRGB = false;
+                material.emissiveTexture = material_emissiveTexture;
 
-                material1.ambientColor = new BABYLON.Color3(0.00, 0.00, 0.00);
+                //Ambient definitions;
+                material.ambientColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 
-// specular definitions;
+                //Specular definitions;
+                material.specularColor = new BABYLON.Color3(1.00, 1.00, 1.00);
 
-                material1.specularColor = new BABYLON.Color3(1.00, 1.00, 1.00);
-//Texture Parameters ;
-                var material1_specularTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
-                material1_specularTexture.uScale = 1;
-                material1_specularTexture.vScale = 1;
-                material1_specularTexture.coordinatesMode = 0;
-                material1_specularTexture.uOffset = 0;
-                material1_specularTexture.vOffset = 0;
-                material1_specularTexture.uAng = 0;
-                material1_specularTexture.vAng = 0;
-                material1_specularTexture.level = 1;
-                material1_specularTexture.coordinatesIndex = 0;
-                material1_specularTexture.hasAlpha = false;
-                material1_specularTexture.getAlphaFromRGB = false;
-                material1.specularTexture = material1_specularTexture;
+                //Specular texture Parameters ;
+                var material_specularTexture = new BABYLON.Texture('assets/pianosprites2.png', scene);
+                material_specularTexture.uScale = 1;
+                material_specularTexture.vScale = 1;
+                material_specularTexture.coordinatesMode = 0;
+                material_specularTexture.uOffset = 0;
+                material_specularTexture.vOffset = 0;
+                material_specularTexture.uAng = 0;
+                material_specularTexture.vAng = 0;
+                material_specularTexture.level = 1;
+                material_specularTexture.coordinatesIndex = 0;
+                material_specularTexture.hasAlpha = false;
+                material_specularTexture.getAlphaFromRGB = false;
+                material.specularTexture = material_specularTexture;
 
-                return material1;
+                return material;
             }
         </script>
     </body>
