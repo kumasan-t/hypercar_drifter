@@ -32,11 +32,10 @@ function Obstacles(threshold, maxObstacles) {
             return;
         }
         this.elapsedTime += delta;
-        if(this.elapsedTime < this.spawnTime)
+        if(this.elapsedTime < (5*Math.exp(-0.05 * globalTime) + 0.2))
             return;
         this.elapsedTime = 0;
-        this.spawnTime -= this.spawnTime/100;
-        console.log(this.spawnTime);
+        //console.log("SPAWN: " + (5*Math.exp(-0.01 * globalTime) + 0.5));
        this.spawnObstacleGroup(this.meshPicker(this.maxObstacles));
     };
     

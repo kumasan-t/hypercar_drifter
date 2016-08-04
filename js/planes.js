@@ -8,7 +8,7 @@ function Plane(threshold, maxPlanes) {
     this.planeDistance = 1.3;
 
     this.spawn = function (scene) {
-        console.log("MAX: " +this.maxPlanes);
+        //console.log("MAX: " +this.maxPlanes);
         for (var planes = 0; planes < this.maxPlanes; planes++) {
             var newPlaneInstance = meshPlane.createInstance("PLANE" + (this.planePosition < 10) ? "0" + this.planePosition : this.planePosition);
             newPlaneInstance.rotate(BABYLON.Axis.Y, this.planePosition * Math.PI / 4, BABYLON.Space.LOCAL);

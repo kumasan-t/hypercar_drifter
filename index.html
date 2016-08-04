@@ -22,7 +22,7 @@
                 padding: 0;
             }
 
-            #renderCanvas{
+            #container, #renderCanvas{
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -36,16 +36,37 @@
                 width: 1066px;
                 height: 600px;
                 touch-action: none;
+                z-index:-1;
+            }
+
+            @font-face {
+                font-family: justice;
+                src: url(assets/font/justicehalf.ttf);
+            }
+
+            #counter {
+                position:absolute;
+                font-family: justice;
+                font-size: 30px;
+                color:white;
+                top:0;
+                z-index:99999;
+                
             }
         </style>
     </head>
     <body>
-        <canvas id="renderCanvas"></canvas>
+        <div id="container">
+            <div id="counter">0</div>
+            <canvas id="renderCanvas"></canvas>
+        </div>
+        
         <script>
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
             var car;
-            var speed = 4;
+            var carSpeed = 3;
+            var obstacleSpeed = 1;
             var obstaclesManager;
             var planeManager = new Plane(-10, 50);
             var specularLight;
@@ -170,10 +191,15 @@
 
             var frameCount = 0;
             engine.runRenderLoop(function () {
-                if (frameCount % 60 == 0)
-                    console.log(engine.fps);
+                if (frameCount % 60 == 0){
+                    //console.log(engine.fps);
+                    console.log("Obstacle speed: " + obstacleSpeed);
+                }
                 frameCount++;
                 globalTime += 1/engine.fps;
+                document.getElementById("counter").innerHTML = engine.fps.toFixed(2);
+                obstacleSpeed = 3 + 12*(1-Math.exp(-0.01 * globalTime));
+                
                 if (carLoaded & barrelLoaded & propellerLoaded) {
                     var xMovement = 0, yMovement = 0;
                     if (keys.left == 1)
@@ -186,8 +212,8 @@
                         yMovement -= 1;
                     updateRotation(car, 1 / engine.fps, xMovement, yMovement);
 
-                    car.position.x -= speed / engine.fps * car.xDirection;
-                    car.position.y += speed / engine.fps * car.yDirection;
+                    car.position.x -= carSpeed / engine.fps * car.xDirection;
+                    car.position.y += carSpeed / engine.fps * car.yDirection;
 
                     if (car.position.x > 1) {
                         car.position.x = 1;
@@ -204,11 +230,11 @@
                     }
                     specularLight.position.x = car.position.x * 4;
                     specularLight.position.y = car.position.y * 4;
-                    obstaclesManager.update(speed, 1/engine.fps);
+                    obstaclesManager.update(obstacleSpeed, 1/engine.fps);
                     obstaclesManager.despawn();
                     obstaclesManager.spawn(scene, 1/engine.fps);
 
-                    planeManager.update(speed, 1/engine.fps);
+                    planeManager.update(obstacleSpeed, 1/engine.fps);
 
                     scene.render();
                 }
