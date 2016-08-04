@@ -4,12 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./js/hand.minified-1.2.js"></script>
-        <script src="./js/cannon.js"></script>  <!-- optional -->
-        <script src="./js/oimo.js"></script>  <!-- optional -->
+        <script src="./js/cannon.js"></script>  
+        <script src="./js/oimo.js"></script> 
         <script src="./js/babylon.js"></script>
         <script src="./js/direction.js"></script>
         <script src="./js/obstacles.js"></script>
         <script src="./js/planes.js"></script>
+        <script src="./js/gameover.physics.js"></script>
         <script src="./js/entities/barrel.js"></script>
         <script src="./js/entities/propeller.js"></script>
         <style>
@@ -63,7 +64,7 @@
         
         <script>
             var canvas = document.getElementById("renderCanvas");
-            var engine = new BABYLON.Engine(canvas, true);
+            var engine = new BABYLON.Engine(canvas, false,null,false);
             var car;
             var carSpeed = 3;
             var obstacleSpeed = 1;
@@ -75,7 +76,7 @@
             var meshPropeller;
             var meshPlane;
             
-            var globalTime = 0;
+            var globalTime = 1000;
             
             var carLoaded = false;
             var barrelLoaded = false;
@@ -97,11 +98,18 @@
                 if (evt.keyCode == 68) {//D        
                     keys.right = 1;
                 }
-                if (evt.keyCode == 87) {//W        
+                if (evt.keyCode == 87){//W        
                     keys.up = 1;
                 }
                 if (evt.keyCode == 83) {//S        
                     keys.down = 1;
+                }
+                if (evt.keyCode == 88) {
+                    obstacleSpeed = 0;
+                    carSpeed = 0;
+                           
+                    gameover(car, planeManager.planeArray, obstaclesManager.obstacles_array,scene, 1 / engine.fps);
+                
                 }
             }
 
@@ -187,6 +195,7 @@
 
             var scene = createScene();
 
+            
             var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, -2.5), scene);
 
             var frameCount = 0;
@@ -198,7 +207,8 @@
                 frameCount++;
                 globalTime += 1/engine.fps;
                 document.getElementById("counter").innerHTML = engine.fps.toFixed(2);
-                obstacleSpeed = 3 + 12*(1-Math.exp(-0.01 * globalTime));
+                if(obstacleSpeed > 0)
+                    obstacleSpeed = 3 + 12*(1-Math.exp(-0.01 * globalTime));
                 
                 if (carLoaded & barrelLoaded & propellerLoaded) {
                     var xMovement = 0, yMovement = 0;
@@ -210,8 +220,10 @@
                         yMovement += 1;
                     if (keys.down == 1)
                         yMovement -= 1;
-                    updateRotation(car, 1 / engine.fps, xMovement, yMovement);
-
+                    if(carSpeed > 0)
+                        updateRotation(car, 1 / engine.fps, xMovement, yMovement);
+                    
+                    if(carSpeed > 0){
                     car.position.x -= carSpeed / engine.fps * car.xDirection;
                     car.position.y += carSpeed / engine.fps * car.yDirection;
 
@@ -228,14 +240,18 @@
                     if (car.position.y < -.5) {
                         car.position.y = -.5;
                     }
+                }
                     specularLight.position.x = car.position.x * 4;
                     specularLight.position.y = car.position.y * 4;
-                    obstaclesManager.update(obstacleSpeed, 1/engine.fps);
-                    obstaclesManager.despawn();
-                    obstaclesManager.spawn(scene, 1/engine.fps);
-
-                    planeManager.update(obstacleSpeed, 1/engine.fps);
-
+                    if(obstacleSpeed > 0) {
+                        
+                        obstaclesManager.update(obstacleSpeed, 1/engine.fps);
+                        obstaclesManager.despawn();
+                        obstaclesManager.spawn(scene, 1/engine.fps);
+                    
+                        planeManager.update(obstacleSpeed, 1/engine.fps);
+                    }
+                    
                     scene.render();
                 }
             });
@@ -308,6 +324,7 @@
                 material_specularTexture.getAlphaFromRGB = false;
                 material.specularTexture = material_specularTexture;
 
+                material.freeze();
                 return material;
             }
         </script>
