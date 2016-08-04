@@ -75,6 +75,9 @@
             var meshBarrel;
             var meshPropeller;
             var meshPlane;
+
+            var fountain;
+            var fountain2;
             
             var globalTime = 1000;
             
@@ -141,6 +144,29 @@
                 specularLight.specularColor = new BABYLON.Color3(1, 1, 1);
                 specularLight.range = 10;
                 specularLight.intensity = 10;
+
+                fountain = BABYLON.Mesh.CreateBox("fountain", .1, scene);
+                fountain.isVisible = false;
+                var particleSystem = new BABYLON.ParticleSystem("particles", 10000, scene);
+                particleSystem.particleTexture = new BABYLON.Texture("assets/Flare.png", scene);
+                particleSystem.minEmitBox = new BABYLON.Vector3(-0, 0, 0); 
+                particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0); 
+                particleSystem.color1 = new BABYLON.Color4(1, 1, 1.0, 1.0);
+                particleSystem.color2 = new BABYLON.Color4(1, 0.5, 1.0, 1.0);
+                particleSystem.colorDead = new BABYLON.Color4(0, 0, 1, 0);
+                particleSystem.minSize = 0.01;
+                particleSystem.maxSize = 0.04;
+                particleSystem.minLifeTime = 0.1;
+                particleSystem.maxLifeTime = .5;
+                particleSystem.emitRate = 100;
+                particleSystem.direction1 = new BABYLON.Vector3(0.1, 0.1, -2);
+                particleSystem.direction2 = new BABYLON.Vector3(-0.1, -0.1, -2);
+                particleSystem.minAngularSpeed = 0;
+                particleSystem.maxAngularSpeed = 0;
+                particleSystem.emitter = fountain;
+                fountain2 = fountain.clone();
+                particleSystem.start();
+
                 BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function (meshes) {
                     car = meshes[0];
                     BABYLON.SceneLoader.ImportMesh("", "assets/", "sottocar.babylon", scene, function (bottom) {
@@ -243,15 +269,23 @@
                 }
                     specularLight.position.x = car.position.x * 4;
                     specularLight.position.y = car.position.y * 4;
+                    
                     if(obstacleSpeed > 0) {
                         
-                        obstaclesManager.update(obstacleSpeed, 1/engine.fps);
-                        obstaclesManager.despawn();
-                        obstaclesManager.spawn(scene, 1/engine.fps);
-                    
-                        planeManager.update(obstacleSpeed, 1/engine.fps);
+	                    obstaclesManager.update(obstacleSpeed, 1/engine.fps);
+	                    obstaclesManager.despawn();
+	                    obstaclesManager.spawn(scene, 1/engine.fps);
+
+	                    fountain.position.x = car.position.x -.1;
+	                    fountain.position.y = car.position.y ;
+	                    fountain.position.z = car.position.z -.1;
+	                    fountain2.position.x = car.position.x +.1;
+	                    fountain2.position.y = car.position.y ;
+	                    fountain2.position.z = car.position.z -.1;
+
+	                    planeManager.update(obstacleSpeed, 1/engine.fps);
                     }
-                    
+
                     scene.render();
                 }
             });
