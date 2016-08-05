@@ -15,7 +15,7 @@ function Obstacles(threshold, maxObstacles) {
     this.despawn = function(){
         this.obstacles_array = this.obstacles_array.filter(function (e) {
 	    if(e.getInstance().position.z < threshold)
-                e.getInstance().dispose();
+                e.dispose();
             return e.getInstance().position.z >= threshold;
 	});
     };
@@ -69,8 +69,10 @@ function Obstacles(threshold, maxObstacles) {
                 
                 case "propeller" :
                     if (Math.random() < 0.1 ) {
-                        console.log("aggiorno");
-                        var propeller = new Propeller(pickedMesh.createInstance("P" + (this.totalMeshes < 10) ? "0" + this.totalMeshes : this.totalMeshes ))
+                        var propeller = new Propeller(
+                            meshPropellerCenter.createInstance("P" + (this.totalMeshes < 10) ? "0" + this.totalMeshes : this.totalMeshes ),
+                            meshAirScrew.createInstance("P1" + (this.totalMeshes < 10) ? "0" + this.totalMeshes : this.totalMeshes ),
+                            meshAirScrew.createInstance("P2" + (this.totalMeshes < 10) ? "0" + this.totalMeshes : this.totalMeshes ));
                         aboutToSpawn.push(propeller);
                         i++;
                         this.totalMeshes++;
@@ -83,12 +85,16 @@ function Obstacles(threshold, maxObstacles) {
         return aboutToSpawn;
     };
     
+    this.getCurrentObstacles = function() {
+        return this.obstacles_array;
+    }
+    
     this.getRandomInt = function(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     };
     
     this.meshLoader = function() {
-        this.obstacles_meshes.push(meshPropellers);
+        this.obstacles_meshes.push(meshPropellerCenter);
         this.obstacles_meshes.push(meshBarrel);
     };
 }

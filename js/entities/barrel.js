@@ -1,6 +1,7 @@
 function Barrel(barrelInstance) {
     this.type = "nitro_barrel";
     this.instance = barrelInstance;
+    this.hasChild = false;
     this.floatingSpeed = 0.55;
     this.spawnCenterX;
     this.spawn = function() {
@@ -12,6 +13,11 @@ function Barrel(barrelInstance) {
     
     this.getInstance = function() {
         return this.instance;
+    };
+    
+    this.dispose = function() {
+        this.instance.dispose();
+        return true;
     };
     
     this.update = function(speed,delta) {

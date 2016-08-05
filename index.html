@@ -10,6 +10,7 @@
         <script src="./js/direction.js"></script>
         <script src="./js/obstacles.js"></script>
         <script src="./js/planes.js"></script>
+        <script src="./js/crash.js"></script>
         <script src="./js/gameover.physics.js"></script>
         <script src="./js/entities/barrel.js"></script>
         <script src="./js/entities/propeller.js"></script>
@@ -71,10 +72,14 @@
             var obstaclesManager;
             var planeManager = new Plane(-10, 50);
             var specularLight;
+            var propellerCenterMaterial;
+            var blackColor;
             
             var meshBarrel;
             var meshPropeller;
             var meshPlane;
+            var meshAirScrew;
+            var meshPropellerCenter;
 
             var fountain;
             var fountain2;
@@ -84,6 +89,9 @@
             var carLoaded = false;
             var barrelLoaded = false;
             var propellerLoaded = false;
+            var propellerCenterLoaded = false;
+            var airScrewLoaded = false;
+            var planeLoaded = false;            
 
             var keys = {
                 left: 0,
@@ -179,6 +187,7 @@
                         car.rotation.y = -Math.PI / 2;
                         car.xDirection = 0;
                         car.yDirection = 0;
+                        car.checkCollision = true;
                         car.scaling = new BABYLON.Vector3(.125, .125, .125);
                         carLoaded = true;
                     });
@@ -191,22 +200,38 @@
                     meshes[0].material = planeMaterial;
                     meshes[0].isVisible = false;
                     meshPlane = meshes[0];
+                    planeLoaded = true;
                     planeManager.spawn(scene);
                 });
 
                 BABYLON.SceneLoader.ImportMesh("", "assets/", "barilenitro.babylon", scene, function (meshes) {
                     meshBarrel = meshes[0];
                     meshBarrel.type = "nitro_barrel";
-                    meshBarrel.position.z = -15;
+                    meshBarrel.isVisible = false;
+                    meshBarrel.checkCollision = true;
                     barrelLoaded = true;
                 });
 
-                BABYLON.SceneLoader.ImportMesh("", "assets/", "ventola.babylon", scene, function (meshes) {
-                    meshPropellers = meshes[0];
-                    meshPropellers.type = "propeller";
-                    meshPropellers.isVisible = false;
-                    propellerLoaded = true;
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "centro.babylon", scene, function (meshes) {
+                    meshPropellers = meshes[0];                         meshPropellerCenter = meshes[0];
+                    meshPropellers.type = "propeller";                          meshPropellerCenter.type = "propeller";
+                    meshPropellers.isVisible = false;                           meshPropellerCenter.position.z = 10;
+                    propellerLoaded = true;                         meshPropellerCenter.checkCollision = true;
+                    meshPropellerCenter.isVisible = false;
+                    propellerCenterLoaded = true;
                 });
+                BABYLON.SceneLoader.ImportMesh("", "assets/", "pala.babylon", scene, function (meshes) {
+                    meshAirScrew = meshes[0];
+                    meshAirScrew.parent = meshPropellerCenter;
+                    meshAirScrew.type = "propeller";
+                    meshAirScrew.checkCollision = true;
+                    meshAirScrew.showBoundingBox = true;
+                    meshAirScrew.isVisible = false;
+                    airScrewLoaded = true;
+                });                 
+
+                propellerCenterMaterial = new BABYLON.StandardMaterial("blackMaterial",scene);
+                blackColor = new BABYLON.Color3(0,0,0);
 
                 obstaclesManager = new Obstacles(-15);
 
@@ -227,7 +252,6 @@
             var frameCount = 0;
             engine.runRenderLoop(function () {
                 if (frameCount % 60 == 0){
-                    //console.log(engine.fps);
                     console.log("Obstacle speed: " + obstacleSpeed);
                 }
                 frameCount++;
@@ -284,6 +308,7 @@
 	                    fountain2.position.z = car.position.z -.1;
 
 	                    planeManager.update(obstacleSpeed, 1/engine.fps);
+                        checkCrash(car,obstaclesManager.getCurrentObstacles());
                     }
 
                     scene.render();
