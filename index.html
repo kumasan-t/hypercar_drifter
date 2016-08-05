@@ -5,61 +5,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./js/hand.minified-1.2.js"></script>
         <script src="./js/cannon.js"></script>  
-        <script src="./js/oimo.js"></script> 
         <script src="./js/babylon.js"></script>
         <script src="./js/direction.js"></script>
         <script src="./js/obstacles.js"></script>
         <script src="./js/planes.js"></script>
         <script src="./js/crash.js"></script>
         <script src="./js/gameover.physics.js"></script>
+        <script src="./js/gui.js"></script>
         <script src="./js/entities/barrel.js"></script>
         <script src="./js/entities/propeller.js"></script>
-        <style>
-            html,body{
-                position:relative;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
+        
+        <link href="./css/mainstyle.css" rel="stylesheet" type="text/css">
 
-            #container, #renderCanvas{
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                margin-left: auto;
-                margin-right: auto;
-                bottom: 0;
 
-                margin-top: auto;
-                margin-bottom: auto;
-                width: 1066px;
-                height: 600px;
-                touch-action: none;
-                z-index:-1;
-            }
 
-            @font-face {
-                font-family: justice;
-                src: url(assets/font/justicehalf.ttf);
-            }
-
-            #counter {
-                position:absolute;
-                font-family: justice;
-                font-size: 30px;
-                color:white;
-                top:0;
-                z-index:99999;
-
-            }
-        </style>
     </head>
     <body>
         <div id="container">
             <div id="counter">0</div>
+            <div id="gameover">
+                <div id="gameover-text">GAME OVER</div>
+                <div id="speed-text">Speed: 120 m/s</div>
+                <div id="distance-text">Distance: 1234.5 m</div>
+            </div>
             <canvas id="renderCanvas"></canvas>
         </div>
 
@@ -76,16 +44,15 @@
             var blackColor;
 
             var meshBarrel;
-            var meshPropeller;
             var meshPlane;
             var meshAirScrew;
             var meshPropellerCenter;
 
             var fountain;
             var fountain2;
-
-            var globalTime = 1000;
-
+            
+            var globalTime = 0;
+            
             var carLoaded = false;
             var barrelLoaded = false;
             var propellerLoaded = false;
@@ -119,8 +86,8 @@
                     obstacleSpeed = 0;
                     carSpeed = 0;
 
-                    gameover(car, planeManager.planeArray, obstaclesManager.obstacles_array, scene, 1 / engine.fps);
-
+                    guiGameover();
+                    gameover(car, planeManager.planeArray, obstaclesManager.obstacles_array,scene, 1 / engine.fps);
                 }
             }
 
@@ -141,6 +108,8 @@
 
             var createScene = function () {
                 var scene = new BABYLON.Scene(engine);
+                
+                guiMainMenu(scene);
                 scene.clearColor = new BABYLON.Color3(.95, .95, .95);
 
                 var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
