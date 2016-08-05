@@ -14,9 +14,7 @@ function gameover(player, planes, obstacles, scene, timestep){
         planes[i].physicsImpostor = new BABYLON.PhysicsImpostor(planes[i], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9, friction:0 }, scene);
         planes[i].physicsImpostor.applyImpulse(new BABYLON.Vector3(2*Math.random()-1, 5*Math.random(), 0), planes[i].getAbsolutePosition());
     }
-    
-    console.log(obstacles);
-    
+        
     for(var i = 0; i < obstacles.length ; i++){
         obstacles[i].getInstance().physicsImpostor = new BABYLON.PhysicsImpostor(obstacles[i].getInstance(), BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9, friction:0 }, scene);
         obstacles[i].getInstance().physicsImpostor.setLinearVelocity(new BABYLON.Vector3(5*Math.random()-1, 2*Math.random(), 0));
