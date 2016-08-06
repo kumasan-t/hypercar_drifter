@@ -46,7 +46,7 @@ function gameScene() {
             bottom[0].material.diffuseColor = new BABYLON.Color3(.05, .05, .05);
             bottom[0].material.specularColor = new BABYLON.Color3(0, 0, 0);
             meshCarGround = bottom[0];
-            meshCarGround.showBoundingBox = true;
+            meshCarGround.showBoundingBox = false;
             meshCarGround.isVisible = false;
             meshCar.checkCollision = true;
             meshCar.scaling = new BABYLON.Vector3(.085, .085, .085);
@@ -59,7 +59,7 @@ function gameScene() {
             car.yDirection = 0;
             car.isVisible = true;
             carGround = meshCarGround.createInstance("carGround");
-            carGround.showBoundingBox = true;
+            carGround.showBoundingBox = false;
             carGround.parent = car;
             carLoaded = true;
         });
@@ -124,10 +124,15 @@ function gameScene() {
 
 function gameUpdateLoop() {
 
-    document.getElementById("counter").innerHTML = engine.fps.toFixed(2);
+    document.getElementById("counter").innerHTML = (obstacleSpeed * 20).toFixed(2) + " km/h<br />" +
+            distance.toFixed(2) + " m";
     if (obstacleSpeed > 0)
         obstacleSpeed = 3 + 12 * (1 - Math.exp(-0.01 * globalTime));
 
+    if(boost)
+        obstacleSpeed *=2;
+    distance += obstacleSpeed * (1/engine.fps);
+    
     if (carLoaded & barrelLoaded & propellerLoaded) {
         var xMovement = 0, yMovement = 0;
         if (keys.left == 1)
@@ -169,6 +174,8 @@ function gameUpdateLoop() {
             obstaclesManager.spawn(gameScene, 1 / engine.fps);
             planeManager.update(obstacleSpeed, 1 / engine.fps);
             if (checkCrash(carGround, obstaclesManager.getCurrentObstacles())) {
+                document.getElementById("speed-text").innerHTML = "Speed: "+ (obstacleSpeed * 20).toFixed(2) +" km/h";
+                document.getElementById("distance-text").innerHTML = "Distance: "+ distance.toFixed(2) +" m";
                 obstacleSpeed = 0;
                 carSpeed = 0;
                 guiGameover();

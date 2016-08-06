@@ -20,16 +20,14 @@
         
         <link href="./css/mainstyle.css" rel="stylesheet" type="text/css">
 
-
-
     </head>
     <body>
         <div id="container">
-            <div id="counter">0</div>
+            <div id="counter"></div>
             <div id="gameover">
                 <div id="gameover-text">GAME OVER</div>
-                <div id="speed-text">Speed: 120 m/s</div>
-                <div id="distance-text">Distance: 1234.5 m</div>
+                <div class="score" id="speed-text">Speed: - m/s</div>
+                <div class="score" id="distance-text">Distance: - m</div>
             </div>
             <canvas id="renderCanvas"></canvas>
         </div>
@@ -57,6 +55,7 @@
             var fountain2;
             
             var globalTime = 0;
+            var distance = 0;
             
             var carLoaded = false;
             var barrelLoaded = false;
@@ -68,6 +67,7 @@
             var menuScene = mainMenuScene();
             var gameScene = gameScene();
             var currentScene = menuScene;
+            var boost = false;
             
             var keys = {
                 left: 0,
@@ -91,6 +91,9 @@
                 if (evt.keyCode == 83) {//S        
                     keys.down = 1;
                 }
+                if(evt.keyCode == 88) { // Space
+                    boost=true;
+                }
             }
 
             function handleKeyUp(evt) {
@@ -106,13 +109,16 @@
                 if (evt.keyCode == 83) {
                     keys.down = 0;
                 }
+                if(evt.keyCode == 88) { // Space
+                     boost=false;
+                }
             }
 
             var frameCount = 0;
             
             engine.runRenderLoop(function () {
                 globalTime += 1 / engine.fps;
-                
+                console.log(globalTime);
                 currentScene.update();
                 currentScene.render();
             });
