@@ -85,7 +85,6 @@
                 if (evt.keyCode == 88) {
                     obstacleSpeed = 0;
                     carSpeed = 0;
-
                     guiGameover();
                     gameover(car, planeManager.planeArray, obstaclesManager.obstacles_array,scene, 1 / engine.fps);
                 }
@@ -108,7 +107,7 @@
 
             var createScene = function () {
                 var scene = new BABYLON.Scene(engine);
-                
+                //var music = new BABYLON.Sound("Theme", "assets/musics/theme.mp3", scene, null, { loop: true, autoplay: true });
                 guiMainMenu(scene);
                 scene.clearColor = new BABYLON.Color3(.95, .95, .95);
 
@@ -157,7 +156,8 @@
                         car.xDirection = 0;
                         car.yDirection = 0;
                         car.checkCollision = true;
-                        car.scaling = new BABYLON.Vector3(.125, .125, .125);
+                        car.scaling = new BABYLON.Vector3(.085, .085, .085);
+                        car.showBoundingBox = true;
                         carLoaded = true;
                     });
                 });
@@ -268,13 +268,18 @@
                         obstaclesManager.despawn();
                         obstaclesManager.spawn(scene, 1 / engine.fps);
                         planeManager.update(obstacleSpeed, 1 / engine.fps);
-                        checkCrash(car, obstaclesManager.getCurrentObstacles());
+                        if (checkCrash(car, obstaclesManager.getCurrentObstacles())) {
+                            obstacleSpeed = 0;
+                            carSpeed = 0;
+                            guiGameover();
+                            gameover(car, planeManager.planeArray, obstaclesManager.obstacles_array,scene, 1 / engine.fps);
+                        }
                     }
                     
-                    fountain.position.x = car.position.x - .1;
+                    fountain.position.x = car.position.x - .075;
                     fountain.position.y = car.position.y;
                     fountain.position.z = car.position.z - .1;
-                    fountain2.position.x = car.position.x + .1;
+                    fountain2.position.x = car.position.x + .075;
                     fountain2.position.y = car.position.y;
                     fountain2.position.z = car.position.z - .1;
                     

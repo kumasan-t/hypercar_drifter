@@ -21,7 +21,6 @@ html,body{
     margin-bottom: auto;
     width: 1066px;
     height: 600px;
-    //touch-action: none;
     z-index:1;
 }
 
