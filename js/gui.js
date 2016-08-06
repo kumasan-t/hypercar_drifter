@@ -51,7 +51,7 @@ function guiMainMenu(scene) {
     );
 
     var newGameButton = new BABYLON.Rectangle2D(
-            {parent: canvas, id: "newGameBtn", x: 433, y: 260, width: 200, height: 80,
+            {parent: canvas, id: "newGameBtn", x: 433, y: 100, width: 200, height: 80,
                 fill: "#40C040FF", roundRadius: 10,
                 children:
                         [
@@ -79,9 +79,9 @@ function guiMainMenu(scene) {
     var animation = new BABYLON.Animation("positionAnim", "position", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
             BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
     var keys = [];
-    keys.push({frame: 0, value: new BABYLON.Vector3(438,265,0)});
-    keys.push({frame: 3, value: new BABYLON.Vector3(433,260,0)});
-    keys.push({frame: 10, value: new BABYLON.Vector3(433,260,0)});
+    keys.push({frame: 0, value: new BABYLON.Vector3(438,105,0)});
+    keys.push({frame: 3, value: new BABYLON.Vector3(433,100,0)});
+    keys.push({frame: 10, value: new BABYLON.Vector3(433,100,0)});
     animation.setKeys(keys);
     
     var event1 = new BABYLON.AnimationEvent(10, function () {
