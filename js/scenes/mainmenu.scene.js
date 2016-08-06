@@ -1,29 +1,36 @@
-function mainMenuScene(){
+function mainMenuScene() {
     var menuScene = new BABYLON.Scene(engine);
+
+    BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", menuScene, function (newMeshes, particleSystems, skeletons) {
+        var car = newMeshes[0];
+        car.position.x = -.5;
+        car.position.y = 0;
+        car.position.z = 0;
+    });
     menuScene.clearColor = new BABYLON.Color3(.5, .5, .95);
-               
+
     var light0 = new BABYLON.SpotLight("Spot0", new BABYLON.Vector3(0, 10, 0), new BABYLON.Vector3(0, -1, 0), 2, 50, menuScene);
     light0.diffuse = new BABYLON.Color3(1, 1, 1);
     light0.specular = new BABYLON.Color3(1, 1, 1);
-    light0.intensity = 2;    
+    light0.intensity = 2;
     menuScene.lampione = light0;
-    
+
     initGround(menuScene);
-    
+
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 1.3, 10, BABYLON.Vector3.Zero(), menuScene);
 
     menuScene.update = mainMenuUpdateLoop;
-    
+    guiMainMenu(menuScene);
     return menuScene;
 }
 
-function initGround(scene){
+function initGround(scene) {
     var ground = BABYLON.Mesh.CreateDisc("disc", 6, 80, scene);
 
     material = new BABYLON.StandardMaterial("kosh5", scene);
     material.diffuseColor = new BABYLON.Color3(1, 0, .3);
     material.emissiveColor = new BABYLON.Color3(0.197647, 0.0117647, 0.150588);
-    
+
     var material_diffuseTexture = new BABYLON.Texture('assets/pianospritemm.png', scene);
     material_diffuseTexture.uScale = 1;
     material_diffuseTexture.vScale = 1;
@@ -40,16 +47,16 @@ function initGround(scene){
     material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
 
     ground.material = material;
-    ground.rotation.x = Math.PI /2;
+    ground.rotation.x = Math.PI / 2;
     ground.position.y = -1;
-    
+
     return ground;
 }
 
-function mainMenuUpdateLoop(){
-    var delta = 1/engine.fps;
-    this.activeCamera.alpha += delta/5;
-    this.lampione.exponent = 20 * Math.sin(globalTime*2) + 20;
+function mainMenuUpdateLoop() {
+    var delta = 1 / engine.fps;
+    this.activeCamera.alpha += delta / 5;
+    this.lampione.exponent = 20 * Math.sin(globalTime * 2) + 20;
     var color = this.lampione.exponent;
-    this.lampione.diffuse = new BABYLON.Color3(1, color/40, color/40);
+    this.lampione.diffuse = new BABYLON.Color3(1, color / 40, color / 40);
 }

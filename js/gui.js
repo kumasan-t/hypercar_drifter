@@ -1,6 +1,6 @@
 function guiGameover() {
     document.getElementById("gameover").style.display = "block";
-    var gameoverCanvas = new BABYLON.ScreenSpaceCanvas2D(scene, {
+    var gameoverCanvas = new BABYLON.ScreenSpaceCanvas2D(gameScene, {
         id: "gameoverCanvas",
         width: 1066, height: 600, backgroundFill: "#00000080"}
     );
@@ -15,7 +15,7 @@ function guiGameover() {
             });
 
     retryButton.pointerEventObservable.add(function () {
-        scene.beginAnimation(retryButton, 0, 10, false);
+        gameScene.beginAnimation(retryButton, 0, 10, false);
     }, BABYLON.PrimitivePointerInfo.PointerUp);
 
     var animation = new BABYLON.Animation("sizeAnim3", "size", 60, BABYLON.Animation.ANIMATIONTYPE_SIZE,
@@ -37,7 +37,7 @@ function guiGameover() {
     var event1 = new BABYLON.AnimationEvent(10, function () {
         document.getElementById("gameover").style.display = "none";
         gameoverCanvas.dispose();
-        var restart = new Restart();
+        var restart = new Restart(gameScene);
         restart.clearScene();
     }, true);
     animation.addEvent(event1);
@@ -88,6 +88,7 @@ function guiMainMenu(scene) {
     
     var event1 = new BABYLON.AnimationEvent(10, function () {
         canvas.dispose();
+        currentScene = gameScene;
     }, true);
     animation.addEvent(event1);
     newGameButton.animations.push(animation);

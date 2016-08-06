@@ -1,4 +1,4 @@
-function Restart() {
+function Restart(scene) {
     
     function disablePhysicsEngine() {
         scene.disablePhysicsEngine();
