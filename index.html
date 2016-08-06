@@ -42,7 +42,8 @@
             var specularLight;
             var propellerCenterMaterial;
             var blackColor;
-
+            
+            var meshCarGround;
             var meshBarrel;
             var meshPlane;
             var meshAirScrew;
@@ -51,7 +52,7 @@
             var fountain;
             var fountain2;
             
-            var globalTime = 0;
+            var globalTime = 1000;
             
             var carLoaded = false;
             var barrelLoaded = false;
@@ -152,12 +153,14 @@
                         bottom[0].material = new BABYLON.StandardMaterial("", scene);
                         bottom[0].material.diffuseColor = new BABYLON.Color3(.05, .05, .05);
                         bottom[0].material.specularColor = new BABYLON.Color3(0, 0, 0);
+                        meshCarGround = bottom[0];
+                        meshCarGround.showBoundingBox = true;
                         car.rotation.y = -Math.PI / 2;
                         car.xDirection = 0;
                         car.yDirection = 0;
                         car.checkCollision = true;
                         car.scaling = new BABYLON.Vector3(.085, .085, .085);
-                        car.showBoundingBox = true;
+                        car.showBoundingBox = false;
                         carLoaded = true;
                     });
                 });
@@ -268,7 +271,7 @@
                         obstaclesManager.despawn();
                         obstaclesManager.spawn(scene, 1 / engine.fps);
                         planeManager.update(obstacleSpeed, 1 / engine.fps);
-                        if (checkCrash(car, obstaclesManager.getCurrentObstacles())) {
+                        if (checkCrash(meshCarGround, obstaclesManager.getCurrentObstacles())) {
                             obstacleSpeed = 0;
                             carSpeed = 0;
                             guiGameover();
