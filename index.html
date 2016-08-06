@@ -12,6 +12,7 @@
         <script src="./js/crash.js"></script>
         <script src="./js/gameover.physics.js"></script>
         <script src="./js/gui.js"></script>
+        <script src="./js/restart.js"></script>
         <script src="./js/entities/barrel.js"></script>
         <script src="./js/entities/propeller.js"></script>
         
@@ -43,6 +44,7 @@
             var propellerCenterMaterial;
             var blackColor;
             
+            var meshCar;
             var meshCarGround;
             var meshBarrel;
             var meshPlane;
@@ -145,9 +147,9 @@
                 particleSystem.start();
 
                 BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", scene, function (meshes) {
-                    car = meshes[0];
+                    meshCar = meshes[0];
                     BABYLON.SceneLoader.ImportMesh("", "assets/", "sottocar.babylon", scene, function (bottom) {
-                        bottom[0].parent = car;
+                        bottom[0].parent = meshCar;
                         bottom[0].position.x = 1.1;
                         bottom[0].position.z = 0;
                         bottom[0].material = new BABYLON.StandardMaterial("", scene);
@@ -155,12 +157,20 @@
                         bottom[0].material.specularColor = new BABYLON.Color3(0, 0, 0);
                         meshCarGround = bottom[0];
                         meshCarGround.showBoundingBox = true;
+                        meshCarGround.isVisible = false;
+                        meshCar.checkCollision = true;
+                        meshCar.scaling = new BABYLON.Vector3(.085, .085, .085);
+                        meshCar.isVisible = false;
+                        car = meshCar.createInstance("caar");
                         car.rotation.y = -Math.PI / 2;
+                        car.position.x = 0;
+                        car.position.y = 0;
                         car.xDirection = 0;
                         car.yDirection = 0;
-                        car.checkCollision = true;
-                        car.scaling = new BABYLON.Vector3(.085, .085, .085);
-                        car.showBoundingBox = false;
+                        car.isVisible = true;
+                        carGround = meshCarGround.createInstance("carGround");
+                        carGround.showBoundingBox = true;
+                        carGround.parent = car;
                         carLoaded = true;
                     });
                 });
@@ -271,7 +281,7 @@
                         obstaclesManager.despawn();
                         obstaclesManager.spawn(scene, 1 / engine.fps);
                         planeManager.update(obstacleSpeed, 1 / engine.fps);
-                        if (checkCrash(meshCarGround, obstaclesManager.getCurrentObstacles())) {
+                        if (checkCrash(carGround, obstaclesManager.getCurrentObstacles())) {
                             obstacleSpeed = 0;
                             carSpeed = 0;
                             guiGameover();

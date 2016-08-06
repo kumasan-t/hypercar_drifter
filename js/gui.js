@@ -37,6 +37,8 @@ function guiGameover() {
     var event1 = new BABYLON.AnimationEvent(10, function () {
         document.getElementById("gameover").style.display = "none";
         gameoverCanvas.dispose();
+        var restart = new Restart();
+        restart.clearScene();
     }, true);
     animation.addEvent(event1);
     retryButton.animations.push(animation);
