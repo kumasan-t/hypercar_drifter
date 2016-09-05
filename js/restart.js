@@ -7,7 +7,7 @@ function Restart(scene) {
     this.clearScene = function () {
         disablePhysicsEngine();
         despawnAll();
-        resetCars();
+        resetCar();
         resetSpeeds();
         respawnPlanes();
         resetDistance();
@@ -28,7 +28,7 @@ function Restart(scene) {
         fountain2.position.z = car.position.z - .1;
     }
 
-    function resetCars() {
+    function resetCar() {
         car = meshCar.createInstance("caar");
         car.rotation.y = -Math.PI / 2;
         car.position.x = 0;

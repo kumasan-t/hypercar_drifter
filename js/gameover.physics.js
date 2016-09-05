@@ -1,3 +1,8 @@
+/* When the car crashes, the physics is enabled on all the
+ * objects on the screen, box impostors are used for all the objects since
+ * the simulation doesn't need to be very precise.
+ * The fog is also changed.
+ */
 function gameover(player, planes, obstacles, scene, timestep){
     scene.collisionsEnabled = false;
     scene.clearColor = new BABYLON.Color3(.5, .5, .95);

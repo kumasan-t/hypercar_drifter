@@ -1,9 +1,13 @@
-var fullAngle = Math.PI/8;
-var speedDirection = 6;
-var alphaPosition = 0.02;
-var alphaRotation = 0.1;
-var Omega = setPeriod(2000);
+var fullAngle = Math.PI/8; // max car rotation angle
+var speedDirection = 6; // max car speed at full angle rotation
+var alphaPosition = 0.02; // parameter used to influence the max oscillation range
+var alphaRotation = 0.1;  // parameter used to influence the max oscillation angle range
+var omega = setPeriod(2000); // oscillation speed
 
+/* When the user presses a key, it actually doesn't move the car, but it rotates the car,
+ * then the horizontal and vertical speed is computed using the current horizanal and vertical 
+ * rotation
+ */
 function updateRotation(player, delta, xMovement, yMovement){
     updateXRotation(player, delta, xMovement);
     updateYRotation(player, delta, yMovement);
@@ -60,11 +64,11 @@ function updateYRotation(player, delta, yMovement){
         direction += yMovement * speedDirection * delta;
     }
     
-    player.position.y -= alphaPosition * 0.1*Math.sin(Omega * getTime()); //Oscillation on the Y axis.
+    player.position.y -= alphaPosition * 0.1*Math.sin(omega * getTime()); //Oscillation on the Y axis.
     direction = Math.max(-1, Math.min(1, direction));
     player.yDirection = direction;
     player.rotation.z = direction * fullAngle;
-    player.rotation.z -= alphaRotation * Math.sin(Omega * getTime()); //Oscillate around the previous angle.
+    player.rotation.z -= alphaRotation * Math.sin(omega * getTime()); //Oscillate around the previous angle.
 }
 
 function setPeriod(period) {

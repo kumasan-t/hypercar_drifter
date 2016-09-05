@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Hypercar Drifter</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./js/hand.minified-1.2.js"></script>
@@ -33,17 +33,26 @@
         </div>
 
         <script>
+            
             var canvas = document.getElementById("renderCanvas");
             var engine = new BABYLON.Engine(canvas, false, null, false);
+            
             var car;
+            
+            /* Parameters used to influence the speed of the car and the obstacles */
             var carSpeed = 3;
             var obstacleSpeed = 1;
+            /* Objects that handles the "tunnel planes"
+               and the obstacles spawning and despawning */
             var obstaclesManager;
             var planeManager = new Plane(-10, 50);
+            
             var specularLight;
             var propellerCenterMaterial;
+            
             var blackColor;
             
+            /* Mesh's parents for instantiation */
             var meshCar;
             var meshCarGround;
             var meshBarrel;
@@ -51,12 +60,14 @@
             var meshAirScrew;
             var meshPropellerCenter;
 
+            /* Particle systems used on the back of the car */
             var fountain;
             var fountain2;
             
-            var globalTime = 0;
-            var distance = 0;
+            var globalTime = 0; // Time passed since a new game is started
+            var distance = 0; // Distance made since a new game is started
             
+            /* Variables used to keep track of meshes loading */
             var carLoaded = false;
             var barrelLoaded = false;
             var propellerLoaded = false;
@@ -64,19 +75,25 @@
             var airScrewLoaded = false;
             var planeLoaded = false;
 
+            /* Scenes in the game (menu and the actual game) */
             var menuScene = mainMenuScene();
             var gameScene = gameScene();
+            
+            /* Scene currently rendered */
             var currentScene = menuScene;
+            /* True if the boost key is pressed, used to accelerate the car */
             var boost = false;
             
-            var keys = {
+            /* Keeps track of the keys currently pressed.
+             * The WASD control scheme is used
+             */
+            var keys = { 
                 left: 0,
                 right: 0,
                 up: 0,
                 down: 0
             };
-            window.addEventListener("keydown", handleKeyDown, false);
-            window.addEventListener("keyup", handleKeyUp, false);
+            /* Defines key handlers... */
             function handleKeyDown(evt) {
                 if (evt.keyCode == 65) {
                     //A        
@@ -91,7 +108,7 @@
                 if (evt.keyCode == 83) {//S        
                     keys.down = 1;
                 }
-                if(evt.keyCode == 88) { // Space
+                if(evt.keyCode == 32) { // Space
                     boost=true;
                 }
             }
@@ -109,18 +126,20 @@
                 if (evt.keyCode == 83) {
                     keys.down = 0;
                 }
-                if(evt.keyCode == 88) { // Space
+                if(evt.keyCode == 32) { // Space
                      boost=false;
                 }
             }
-
-            var frameCount = 0;
+            
+            /* ... and attach it to the application */
+            window.addEventListener("keydown", handleKeyDown, false);
+            window.addEventListener("keyup", handleKeyUp, false);
             
             engine.runRenderLoop(function () {
                 globalTime += 1 / engine.fps;
-                console.log(globalTime);
                 currentScene.update();
                 currentScene.render();
+                
             });
 
             window.addEventListener("resize", function () {

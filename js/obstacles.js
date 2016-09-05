@@ -12,6 +12,7 @@ function Obstacles(threshold, maxObstacles) {
         this.obstacles_array.push(o);
     };
     
+    // despawnes the obstacles behind a z threshold
     this.despawn = function(){
         this.obstacles_array = this.obstacles_array.filter(function (e) {
 	    if(e.getInstance().position.z < threshold)
@@ -20,12 +21,18 @@ function Obstacles(threshold, maxObstacles) {
 	});
     };
     
+    /* Updates the obstacles position using the current obstacle speed and
+     * the time passed since the last render
+     */
     this.update = function(speed, delta){
         for(var i = 0; i<this.obstacles_array.length; i++){
             this.obstacles_array[i].update(speed,delta);
         }
     };
     
+    /* Spawn an obstacle if enough time is passed and 
+     * updates the elapsed and spawn time
+     */ 
     this.spawn = function(scene, delta){
         if (this.obstacles_meshes.length == 0 ) {
             this.meshLoader(scene);
@@ -35,10 +42,12 @@ function Obstacles(threshold, maxObstacles) {
         if(this.elapsedTime < (5*Math.exp(-0.05 * globalTime) + 0.2))
             return;
         this.elapsedTime = 0;
-        //console.log("SPAWN: " + (5*Math.exp(-0.01 * globalTime) + 0.5));
        this.spawnObstacleGroup(this.meshPicker(this.maxObstacles));
     };
     
+    /* if the obstacle has multiple parts, this function handles the 
+     * spawning of all the parts
+     */
     this.spawnObstacleGroup = function(selectedObstacles) {
         for (var i = 0; i < selectedObstacles.length; i++) {
             selectedObstacles[i].spawn();
@@ -47,11 +56,9 @@ function Obstacles(threshold, maxObstacles) {
     };
     
     /**
-     * In this is method we are required to check every selcted mesh type in
+     * In this method we are required to check every selected mesh type in
      * order to create the proper corresponding object. Further meshes must be
      * added manually to the switch case with the proper class.
-     * @param {type} numberOfMeshes
-     * @returns {Array|Obstacles.meshPicker.aboutToSpawn}
      */
     this.meshPicker = function(numberOfMeshes) {
         var aboutToSpawn = [];
@@ -93,6 +100,7 @@ function Obstacles(threshold, maxObstacles) {
         return Math.floor(Math.random() * (max - min)) + min;
     };
     
+    /* init the functions used to load different obstacles meshes */
     this.meshLoader = function() {
         this.obstacles_meshes.push(meshPropellerCenter);
         this.obstacles_meshes.push(meshBarrel);

@@ -1,6 +1,7 @@
 function mainMenuScene() {
     var menuScene = new BABYLON.Scene(engine);
 
+    /* load car mesh */
     BABYLON.SceneLoader.ImportMesh("", "assets/", "supercar.babylon", menuScene, function (newMeshes, particleSystems, skeletons) {
         var car = newMeshes[0];
         car.position.x = -.5;
@@ -9,18 +10,19 @@ function mainMenuScene() {
     });
     menuScene.clearColor = new BABYLON.Color3(.5, .5, .95);
 
+    /* load the slow blinking red spot light */
     var light0 = new BABYLON.SpotLight("Spot0", new BABYLON.Vector3(0, 10, 0), new BABYLON.Vector3(0, -1, 0), 2, 50, menuScene);
     light0.diffuse = new BABYLON.Color3(1, 1, 1);
     light0.specular = new BABYLON.Color3(1, 1, 1);
     light0.intensity = 2;
     menuScene.lampione = light0;
 
-    initGround(menuScene);
+    initGround(menuScene); // ground setup
 
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 1.3, 10, BABYLON.Vector3.Zero(), menuScene);
 
-    menuScene.update = mainMenuUpdateLoop;
-    guiMainMenu(menuScene);
+    menuScene.update = mainMenuUpdateLoop; // init the main menu render loop
+    guiMainMenu(menuScene); // show the HUD
     return menuScene;
 }
 

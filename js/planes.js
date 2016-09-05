@@ -1,14 +1,14 @@
 function Plane(threshold, maxPlanes) {
     this.maxPlanes = maxPlanes;
-    this.time = 0;
-    this.totalPlanes = 0;
-    this.threshold = threshold; 
+    this.time = 0; // used to update the planes position
+    this.totalPlanes = 0; // planes currently in front of the camera
+    this.threshold = threshold; // z position before the despawn
     this.planeArray = [];
-    this.planePosition = 0;
-    this.planeDistance = 1.3;
+    this.planePosition = 0; // z position the nex plane is goin to be spawned at
+    this.planeDistance = 1.3; // distance bewteen the planes
 
+    /* Spawns the planes and add them to the array */
     this.spawn = function (scene) {
-        //console.log("MAX: " +this.maxPlanes);
         for (var planes = 0; planes < this.maxPlanes; planes++) {
             var newPlaneInstance = meshPlane.createInstance("PLANE" + (this.planePosition < 10) ? "0" + this.planePosition : this.planePosition);
             newPlaneInstance.rotate(BABYLON.Axis.Y, this.planePosition * Math.PI / 4, BABYLON.Space.LOCAL);
@@ -18,6 +18,7 @@ function Plane(threshold, maxPlanes) {
         }
     }
 
+    /* Update the planes position using the speed parameter and the time since the last render */
     this.update = function (speed, delta) {
         this.time += delta;
         if (this.planePosition + 1 < this.maxPlanes) {
